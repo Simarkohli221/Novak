@@ -1,6 +1,8 @@
 #include "../../include/engine/MatchingEngine.hpp"
 #include <atomic>
 #include <thread>
+#include <vector>
+using novax::common::Trade;
 namespace novax::engine
 {
 
@@ -46,6 +48,44 @@ void MatchingEngine::submitOrder(const OrderRequest& request)
 }
 void MatchingEngine::run()
 {
+    OrderRequest request;
+
+    while (running_)
+    {
+        if (!requestQueue_.pop(request))
+        {
+            break;
+        }
+
+        std::vector<novax::common::Trade> trades;
+
+        switch (request.type)
+        {
+        case RequestType::NEW_ORDER:
+            trades = orderBook_.addOrder(request.order);
+            break;
+
+        case RequestType::CANCEL_ORDER:
+            orderBook_.cancelOrder(request.orderId);
+            break;
+
+        case RequestType::MODIFY_ORDER:
+            trades = orderBook_.modifyOrder(
+                request.orderId,
+                request.newPrice,
+                request.newQuantity
+            );
+            break;
+        }
+        for (const auto& trade : trades)
+        {
+            tradeQueue_.push(trade);
+        }
+    }
+}
+bool MatchingEngine::getTrade(Trade& trade)
+{
+    return tradeQueue_.pop(trade);
 }
 
 } // namespace novax::engine

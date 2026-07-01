@@ -27,6 +27,8 @@ public:
 
     void submitOrder(const OrderRequest& request);
 
+    bool getTrade(novax::common::Trade& trade);
+
 private:
 
     void run();

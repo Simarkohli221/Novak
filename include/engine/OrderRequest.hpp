@@ -16,7 +16,7 @@ struct OrderRequest
 {
     RequestType type = RequestType::NEW_ORDER;
 
-    novax::common::Order order{};
+    novax::common::Order order;
 
     novax::common::OrderId orderId = 0;
 
@@ -25,4 +25,4 @@ struct OrderRequest
     novax::common::Quantity newQuantity = 0;
 };
 
-} // namespace novax::engine
+}

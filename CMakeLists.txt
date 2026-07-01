@@ -12,3 +12,5 @@ file(GLOB_RECURSE SOURCES
 )
 
 add_executable(NovakExchange ${SOURCES})
+
+target_link_libraries(NovakExchange ws2_32)
