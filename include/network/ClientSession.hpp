@@ -2,6 +2,9 @@
 
 #include <thread>
 
+#include "Socket.hpp"
+#include "../engine/MatchingEngine.hpp"
+#include <string>
 namespace novax::network
 {
 
@@ -9,9 +12,15 @@ class ClientSession
 {
 public:
 
-    explicit ClientSession(int socket);
+    ClientSession(
+        Socket socket,
+        novax::engine::MatchingEngine& engine
+    );
 
     ~ClientSession();
+
+    ClientSession(const ClientSession&) = delete;
+    ClientSession& operator=(const ClientSession&) = delete;
 
     void start();
 
@@ -21,9 +30,12 @@ private:
 
 private:
 
-    int socket_;
+    Socket socket_;
+
+    novax::engine::MatchingEngine& matchingEngine_;
 
     std::thread workerThread_;
+    void sendMessage(const std::string& message);
 };
 
-}
+} // namespace novax::network

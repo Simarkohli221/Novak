@@ -2,6 +2,7 @@
 #include <iterator>
 #include <algorithm>
 #include <chrono>
+#include <iostream>
 
 namespace novax::orderbook
 {
@@ -53,6 +54,68 @@ bool OrderBook::cancelOrder(OrderId orderId)
     orderIndex_.erase(indexIt);
 
     return true;
+}
+
+void OrderBook::printBook() const
+{
+    std::cout
+        << "\n=========================================\n";
+
+    std::cout
+        << "              ORDER BOOK\n";
+
+    std::cout
+        << "=========================================\n\n";
+
+    std::cout
+        << "SELL\n";
+
+    std::cout
+        << "Price\tQuantity\n";
+
+    for (const auto& [price, orders] : asks_)
+    {
+        Quantity totalQuantity = 0;
+
+        for (const auto& order : orders)
+        {
+            totalQuantity += order.remainingQuantity;
+        }
+
+        std::cout
+            << price
+            << '\t'
+            << totalQuantity
+            << '\n';
+    }
+
+    std::cout
+        << "\n-----------------------------------------\n\n";
+
+    std::cout
+        << "BUY\n";
+
+    std::cout
+        << "Price\tQuantity\n";
+
+    for (const auto& [price, orders] : bids_)
+    {
+        Quantity totalQuantity = 0;
+
+        for (const auto& order : orders)
+        {
+            totalQuantity += order.remainingQuantity;
+        }
+
+        std::cout
+            << price
+            << '\t'
+            << totalQuantity
+            << '\n';
+    }
+
+    std::cout
+        << "\n=========================================\n";
 }
 void OrderBook::addRestingOrder(Order&& order)
 {
@@ -295,8 +358,8 @@ std::vector<Trade> OrderBook::modifyOrder(
 
     modifiedOrder.quantity = newQuantity;
 
-    modifiedOrder.remainingQuantity = newQuantity;
-
+modifiedOrder.remainingQuantity =
+    modifiedOrder.quantity;
     modifiedOrder.status = OrderStatus::NEW;
 
     modifiedOrder.timestamp = std::chrono::steady_clock::now();

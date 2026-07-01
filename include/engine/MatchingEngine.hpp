@@ -7,6 +7,7 @@
 #include "../orderbook/OrderBook.hpp"
 #include "../queue/ThreadSafeQueue.hpp"
 #include "OrderRequest.hpp"
+
 namespace novax::engine
 {
 
@@ -25,9 +26,15 @@ public:
 
     void stop();
 
-    void submitOrder(const OrderRequest& request);
+    novax::common::OrderId submitOrder(
+        OrderRequest request
+    );
 
-    bool getTrade(novax::common::Trade& trade);
+    bool getTrade(
+        novax::common::Trade& trade
+    );
+
+    void printOrderBook() const;
 
 private:
 
@@ -44,6 +51,8 @@ private:
     std::thread workerThread_;
 
     std::atomic<bool> running_{false};
+
+    std::atomic<novax::common::OrderId> nextOrderId_{1};
 };
 
 } // namespace novax::engine

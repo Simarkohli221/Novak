@@ -2,9 +2,11 @@
 
 #include <atomic>
 #include <thread>
-
+#include <memory>
+#include <vector>
 #include "Socket.hpp"
-
+#include "ClientSession.hpp"
+#include "../engine/MatchingEngine.hpp"
 namespace novax::network
 {
 
@@ -28,9 +30,11 @@ private:
 
     Socket serverSocket_{INVALID_SOCKET};
 
-    std::atomic<bool> running_{false};
-
     std::thread acceptThread_;
+
+    std::atomic<bool> running_{false};
+    novax::engine::MatchingEngine matchingEngine_;
+    std::vector<std::unique_ptr<ClientSession>> sessions_;
 };
 
 }

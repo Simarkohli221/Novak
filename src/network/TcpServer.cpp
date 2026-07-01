@@ -1,6 +1,6 @@
 #include "../../include/network/TcpServer.hpp"
 #include <iostream>
-
+#include <memory>
 namespace novax::network
 {
 
@@ -47,7 +47,7 @@ bool TcpServer::start(int port)
         serverSocket_ = INVALID_SOCKET;
         return false;
     }
-
+    matchingEngine_.start();
     running_ = true;
 
     acceptThread_ = std::thread(
@@ -72,6 +72,8 @@ void TcpServer::stop()
     {
         acceptThread_.join();
     }
+    matchingEngine_.stop();
+    sessions_.clear();
 }
 
 void TcpServer::acceptLoop()
@@ -87,14 +89,22 @@ void TcpServer::acceptLoop()
                 reinterpret_cast<sockaddr*>(&clientAddress),
                 &clientLength
             );
-            std::cout << "Client connected!\n";
+
         if (clientSocket == INVALID_SOCKET)
         {
             continue;
         }
 
-        closesocket(clientSocket);
+        std::cout << "Client connected!\n";
+
+      sessions_.push_back(
+    std::make_unique<ClientSession>(
+        clientSocket,
+        matchingEngine_
+    )
+);
+
+        sessions_.back()->start();
     }
 }
-
 } // namespace novax::network

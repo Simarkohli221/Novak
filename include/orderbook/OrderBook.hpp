@@ -8,6 +8,7 @@
 
 #include "../common/Order.hpp"
 #include "../common/Trade.hpp"
+
 namespace novax::orderbook
 {
 
@@ -18,6 +19,7 @@ using novax::common::Price;
 using novax::common::Quantity;
 using novax::common::Side;
 using novax::common::OrderStatus;
+
 struct OrderLocation
 {
     Price price;
@@ -49,18 +51,24 @@ public:
 
     bool empty() const;
 
+    void printBook() const;
+
 private:
+
     Trade createTrade(
-    const Order& buyOrder,
-    const Order& sellOrder,
-    Quantity executedQuantity,
-    Price executionPrice
-);
+        const Order& buyOrder,
+        const Order& sellOrder,
+        Quantity executedQuantity,
+        Price executionPrice
+    );
+
     std::vector<Trade> matchBuyOrder(Order& order);
 
     std::vector<Trade> matchSellOrder(Order& order);
 
     void addRestingOrder(Order&& order);
+
+private:
 
     std::map<
         Price,

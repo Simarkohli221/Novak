@@ -9,7 +9,8 @@ enum class RequestType
 {
     NEW_ORDER,
     CANCEL_ORDER,
-    MODIFY_ORDER
+    MODIFY_ORDER,
+    BOOK
 };
 
 struct OrderRequest

@@ -12,13 +12,13 @@ struct Order
 {
     OrderId orderId = 0;
 
-    std::string symbol{};
+    std::string symbol;
 
     Side side = Side::BUY;
 
     OrderType type = OrderType::LIMIT;
 
-    Price price = 0;
+    Price price = 0.0;
 
     Quantity quantity = 0;
 
@@ -26,7 +26,7 @@ struct Order
 
     OrderStatus status = OrderStatus::NEW;
 
-    std::chrono::steady_clock::time_point timestamp{};
+    std::chrono::steady_clock::time_point timestamp;
 };
 
-}
+} // namespace novax::common

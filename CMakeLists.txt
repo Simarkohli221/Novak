@@ -7,10 +7,39 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
 
-file(GLOB_RECURSE SOURCES
+# -------------------------
+# Server Sources
+# -------------------------
+
+file(GLOB_RECURSE SERVER_SOURCES
     src/*.cpp
 )
 
-add_executable(NovakExchange ${SOURCES})
+# Remove TestClient from server build
+list(REMOVE_ITEM SERVER_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/client/TestClient.cpp
+)
 
-target_link_libraries(NovakExchange ws2_32)
+add_executable(
+    NovakExchange
+    ${SERVER_SOURCES}
+)
+
+target_link_libraries(
+    NovakExchange
+    ws2_32
+)
+
+# -------------------------
+# Test Client
+# -------------------------
+
+add_executable(
+    TestClient
+    src/client/TestClient.cpp
+)
+
+target_link_libraries(
+    TestClient
+    ws2_32
+)

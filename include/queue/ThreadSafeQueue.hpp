@@ -27,6 +27,21 @@ public:
     void stop();
 
     bool empty();
+    bool tryPop(T& value)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (queue_.empty())
+    {
+        return false;
+    }
+
+    value = std::move(queue_.front());
+
+    queue_.pop();
+
+    return true;
+}
 
 private:
 
@@ -70,7 +85,7 @@ bool ThreadSafeQueue<T>::pop(T& item)
         return false;
     }
 
-    item = queue_.front();
+    item = std::move(queue_.front());
     queue_.pop();
 
     return true;
